@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TMDB</title>
+    <style>
+        body {
+            background: #03070b;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: #ffffff;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        .search-container {
+            position: relative;
+            width: 100%;
+            height: 450px;
+            overflow: hidden;
+            object-fit: cover;
+            border-radius: 16px;
+        }
+
+        .search-container img {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(30%);
+        }
+
+        .overlay {
+            position: absolute;
+            inset: 0;
+            padding: 60px;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .overlay h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: -20px;
+        }
+
+        .overlay h4 {
+            font-size: 1.8rem;
+            font-weight: 400;
+            margin-bottom: 70px;
+        }
+
+        .search-box {
+            position: absolute;
+            top: 80%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            gap: 10px;
+            padding: 8px;
+            border-radius: 50px;
+            width: 90%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 14px 20px;
+            border-radius: 30px;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .search-box button {
+            padding: 14px 22px;
+            border-radius: 30px;
+            border: none;
+            background: #01b4e4;
+            color: white;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .search-box button:hover {
+            background: #0390b3;
+            color: rgb(62, 61, 61);
+        }
+
+        .movie-layout {
+            width: 92%;
+            margin: 40px auto;
+        }
+
+        .movie-layout h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            border-left: 8px solid #01b4e4;
+            padding-left: 15px;
+        }
+
+
+        .moviecontainer {
+            display: flex;
+            gap: 18px;
+            overflow-x: auto;
+            padding-bottom: 20px;
+            scroll-behavior: smooth;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+            transform: translateX(0);
+        }
+
+        .moviecontainer.fade-out {
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+
+        .moviecontainer.fade-in {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+
+
+        .moviecontainer::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .moviecontainer::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .moviecontainer::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-color);
+        }
+
+
+
+        .moviecards {
+            min-width: 220px;
+            height: 340px;
+            background: #111;
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: 0.35s ease;
+        }
+
+        .moviecards:hover {
+            transform: translateY(-10px) scale(1.06);
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.8);
+            border-color: #00d2ff;
+        }
+
+        .movie-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+
+        .moviecards::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 10%, transparent 50%);
+        }
+
+
+        .movie-info {
+            position: absolute;
+            bottom: 12px;
+            left: 12px;
+            right: 12px;
+            z-index: 2;
+        }
+
+        .movie-title {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: white;
+        }
+
+        .movie-release {
+            font-size: 13px;
+            color: #ccc;
+        }
+
+        .movie-scroll-wrapper {
+            position: relative;
+        }
+
+        .fade-right {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 90px;
+            height: 93%;
+            pointer-events: none;
+            background: linear-gradient(to left,
+                    #242424,
+                    transparent);
+            transition: opacity 0.3s ease;
+        }
+
+        .trending-toggle {
+            display: inline-flex;
+            border: 1px solid #01b4e4;
+            border-radius: 30px;
+            margin-left: 20px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            background: transparent;
+        }
+
+        .trending-toggle button {
+            padding: 6px 20px;
+            border: none;
+            background: transparent;
+            color: #fff;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .trending-toggle button.active {
+            background: linear-gradient(90deg, #90cea1, #01b4e4);
+            color: #050e12;
+            border-radius: 25px;
+        }
+
+        .Popular-toggle {
+            display: inline-flex;
+            border: 1px solid #01b4e4;
+            border-radius: 30px;
+            margin-left: 20px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            background: transparent;
+        }
+
+        .Popular-toggle button {
+            padding: 6px 20px;
+            border: none;
+            background: transparent;
+            color: #fff;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .Popular-toggle button.active {
+            background: linear-gradient(90deg, #90cea1, #01b4e4);
+            color: #050e12;
+            border-radius: 25px;
+        }
+
+        .toprated-toggle {
+            display: inline-flex;
+            border: 1px solid #01b4e4;
+            border-radius: 30px;
+            margin-left: 20px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            background: transparent;
+        }
+
+        .toprated-toggle button {
+            padding: 6px 20px;
+            border: none;
+            background: transparent;
+            color: #fff;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .toprated-toggle button.active {
+            background: linear-gradient(90deg, #90cea1, #01b4e4);
+            color: #050e12;
+            border-radius: 25px;
+        }
+
+        .view-all-wrapper {
+            min-width: 180px;
+            height: 320px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            margin-left: 10px;
+        }
+
+        .view-all-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 14px 22px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 30px;
+            cursor: pointer;
+            backdrop-filter: blur(6px);
+            transition: all 0.3s ease;
+        }
+
+        .view-all-btn:hover {
+            background: #00bfff;
+            color: #000;
+            transform: scale(1.08);
+        }
+
+       /* =========================
+   MOBILE RESPONSIVE FIX
+========================= */
+
+@media (max-width: 768px) {
+
+    body {
+        overflow-x: hidden;
+    }
+
+    /* HERO SECTION */
+    .search-container {
+        height: 320px;
+        border-radius: 12px;
+    }
+
+    .overlay {
+        padding: 20px;
+        text-align: center;
+        align-items: center;
+    }
+
+    .overlay h1 {
+        font-size: 1.9rem;
+        line-height: 1.2;
+        margin-bottom: 10px;
+    }
+
+    .overlay h4 {
+        font-size: 1rem;
+        margin-bottom: 35px;
+        opacity: 0.85;
+    }
+
+    /* SEARCH BAR */
+    .search-box {
+        top: 82%;
+        width: 95%;
+        padding: 6px;
+    }
+
+    .search-box input {
+        padding: 12px 16px;
+        font-size: 14px;
+    }
+
+    .search-box button {
+        padding: 12px 18px;
+        font-size: 14px;
+    }
+
+    /* SECTION LAYOUT */
+    .movie-layout {
+        width: 95%;
+        margin: 25px auto;
+    }
+
+    .movie-layout h2 {
+        font-size: 1.3rem;
+        margin-bottom: 14px;
+        border-left: 5px solid #01b4e4;
+        padding-left: 10px;
+    }
+
+    /* MOVIE SCROLL */
+    .moviecontainer {
+        gap: 10px;
+        padding-bottom: 10px;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .moviecontainer::-webkit-scrollbar {
+        height: 0;
+    }
+
+    /* MOVIE CARD */
+    .moviecards {
+        min-width: 125px;
+        height: 200px;
+        border-radius: 12px;
+    }
+
+    .movie-title {
+        font-size: 13px;
+    }
+
+    .movie-release {
+        font-size: 11px;
+    }
+
+    /* FADE FIX */
+    .fade-right {
+        height: 95%;
+    }
+
+    /* TOGGLE BUTTONS */
+    .trending-toggle,
+    .Popular-toggle,
+    .toprated-toggle {
+        margin-left: 0;
+        margin-top: 10px;
+        transform: scale(0.9);
+    }
+
+    /* VIEW ALL */
+    .view-all-wrapper {
+        min-width: 140px;
+        height: 200px;
+    }
+
+    .view-all-btn {
+        padding: 10px 16px;
+        font-size: 13px;
+    }
+}
+
+    </style>
+</head>
+
+<body>
+
+    <div class="search-container">
+        <img src="https://images.unsplash.com/photo-1689659700109-db8a16a7da0a?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            alt="banner">
+        <div class="overlay">
+            <h1>Welcome.</h1>
+            <h4>Millions of movies, TV shows and people to discover. Explore now.</h4>
+
+            <div class="search-box">
+                <input class="search-boxinput" type="text" placeholder="Search for a movie, TV show, person..." />
+                <button class="searchbtn">Search</button>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="movie-layout">
+        <h2>Trending Movies🔥</h2>
+        <div class="trending-toggle">
+            <button id="trendingDay" class="active">Today</button>
+            <button id="trendingWeek">This Week</button>
+        </div>
+        <div class="movie-scroll-wrapper">
+            <div class="moviecontainer">
+                <!-- Trending movies will be appended here via JS -->
+            </div>
+
+            <div class="fade-right" id="fadeRight"></div>
+        </div>
+    </div>
+
+
+    <div class="movie-layout">
+        <h2>Popular Movies🔥</h2>
+        <div class="Popular-toggle">
+            <button id="popularStreaming" class="active">Streaming</button>
+            <button id="popularOnTv">OnTv</button>
+            <button id="popularForRent">For Rent</button>
+            <button id="popularInTheaters">In Theaters</button>
+        </div>
+        <div class="movie-scroll-wrapper">
+            <div class="moviecontainer" id="popularMoviesContainer">
+                <!-- Popular movies will be appended here via JS -->
+            </div>
+            <div class="fade-right" id="fadeRightPopular"></div>
+        </div>
+    </div>
+
+
+
+    <div class="movie-layout">
+        <h2>Top rated Movies🔥</h2>
+        <div class="toprated-toggle">
+            <button id="toprated-movies" class="active">Movies</button>
+            <button id="toprated-tv">Tv</button>
+        </div>
+        <div class="movie-scroll-wrapper">
+            <div class="moviecontainer" id="TopratedMoviesContainer">
+                <!-- Toprated movies will be appended here via JS -->
+            </div>
+            <div class="fade-right" id="fadeRightToprated"></div>
+        </div>
+    </div>
+
+
+
+
+    <div class="movie-layout">
+        <h2>upcoming Movies🔥</h2>
+        <div class="movie-scroll-wrapper">
+            <div class="moviecontainer" id="UpcomingMoviesContainer">
+                <!-- Upcoming movies will be appended here via JS -->
+            </div>
+            <div class="fade-right" id="fadeRightupcoming"></div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+    <script src="js/dashboard.js"></script>
+</body>
+
+</html>

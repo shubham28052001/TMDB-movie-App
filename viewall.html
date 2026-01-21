@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View All Movies</title>
+    <style>
+        body {
+            background: #03070b;
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+            padding: 20px;
+            margin: 0;
+              user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            font-size: 28px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .movie-card {
+            background: #1a1a1a;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .movie-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(255, 255, 255, 0.1);
+        }
+
+        .movie-card img {
+            width: 100%;
+            display: block;
+            border-bottom: 1px solid #333;
+        }
+
+        .movie-card h4 {
+            font-size: 16px;
+            padding: 10px;
+            text-align: center;
+            color: #f0f0f0;
+            margin: 0;
+        }
+
+        #loadMoreBtn {
+            background: linear-gradient(90deg, #ff6a00, #ee0979);
+            color: #fff;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        #loadMoreBtn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(255, 106, 0, 0.5);
+        }
+
+        @media (max-width: 600px) {
+            .movies-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            }
+
+            h2 {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2 id="pageTitle">Movies</h2>
+
+    <div class="movies-grid" id="allMovies">
+        <!-- Movies will be populated here dynamically -->
+    </div>
+    <div style="text-align:center; margin-top:20px;">
+        <button id="loadMoreBtn" onclick="loadMore()">Load More</button>
+    </div>
+
+    <script>
+        const API_KEY = 'b1bbbc80a37c2eb97c159a9352840008';
+        const BASE_URL = "https://api.themoviedb.org/3";
+        let allMovies = [];
+        let selectedMovie = [];
+        // 🔹 Read category from URL
+        const params = new URLSearchParams(window.location.search);
+        const category = params.get("category");
+        const container = document.getElementById("allMovies");
+        const title = document.getElementById("pageTitle");
+
+
+        title.innerText = category.toUpperCase() + " MOVIES";
+        let currentPage = 1;
+
+
+        function getApiUrl(currentPage) {
+            if (category === "trending") {
+                return `${BASE_URL}/trending/movie/week?api_key=${API_KEY}&page=${currentPage}`;
+            } else if (category === "popular") {
+                return `${BASE_URL}/movie/popular?api_key=${API_KEY}&page=${currentPage}`;
+            } else if (category === "toprated") {
+                return `${BASE_URL}/movie/top_rated?api_key=${API_KEY}&page=${currentPage}`;
+            } else if (category === "upcoming") {
+                return `${BASE_URL}/movie/upcoming?api_key=${API_KEY}&page=${currentPage}`;
+            } else {
+                console.warn("Unknown category, defaulting to trending");
+                return `${BASE_URL}/trending/movie/week?api_key=${API_KEY}&page=${currentPage}`;
+            }
+        }
+
+        async function fetchMovies() {
+            try {
+                const url = await getApiUrl(currentPage);
+                const res = await fetch(url);
+                const data = await res.json();
+                allMovies = [...allMovies, ...data.results]
+                console.log("API DATA 👉", allMovies);
+                showMovies(allMovies);
+            } catch (err) {
+                console.error("Fetch Error:", err);
+            }
+        }
+
+        function showMovies(movies) {
+            if (!movies || movies.length === 0) {
+                container.innerHTML = "<p>No movies found.</p>";
+                return;
+            }
+
+            movies.forEach(movie => {
+                container.innerHTML += `
+            <div class="movie-card" onclick="goToMovieDetail(${movie.id})">
+                <img src="https://image.tmdb.org/t/p/w300/${movie.poster_path}" alt="${movie.title || movie.name}" />
+                <h4>${movie.title || movie.name}</h4>
+            </div>
+        `;
+            });
+        }
+
+        async function loadMore() {
+            currentPage++;
+            try {
+                const url = getApiUrl(currentPage);
+                const res = await fetch(url);
+                const data = await res.json();
+                allMovies = [...allMovies, ...data.results]; 
+                showMovies(allMovies); 
+            } catch (err) {
+                console.error("Load More Error:", err);
+            }
+        }
+
+
+        function goToMovieDetail(movieId) {
+            const movie = allMovies.find(m => m.id === movieId);
+            if (movie) {
+                localStorage.setItem("selectedMovie", JSON.stringify(movie)); // sirf single movie
+                window.location.href = `moviedetail.html?id=${movieId}`;
+            }
+        }
+
+
+        fetchMovies();
+    </script>
+</body>
+
+</html>

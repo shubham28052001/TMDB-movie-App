@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Search Results</title>
+<style>
+    body {
+        background: #03070b;
+        color: #fff;
+        font-family: 'Arial', sans-serif;
+        padding: 20px;
+        margin: 0;
+    }
+
+    h2 {
+        margin-bottom: 20px;
+        font-size: 28px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .movies-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px,1fr));
+        gap: 20px;
+    }
+
+    .movie-card {
+        background: #1a1a1a;
+        border-radius: 12px;
+        overflow: hidden;
+        transition: transform 0.3s, box-shadow 0.3s;
+        cursor: pointer;
+    }
+
+    .movie-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(255, 255, 255, 0.1);
+    }
+
+    .movie-card img {
+        width: 100%;
+        display: block;
+        border-bottom: 1px solid #333;
+    }
+
+    .movie-card h4 {
+        font-size: 16px;
+        padding: 10px;
+        text-align: center;
+        color: #f0f0f0;
+        margin: 0;
+    }
+
+    #loadMoreBtn {
+        background: linear-gradient(90deg, #ff6a00, #ee0979);
+        color: #fff;
+        border: none;
+        padding: 12px 30px;
+        font-size: 16px;
+        border-radius: 30px;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+        display: block;
+        margin: 20px auto 0;
+    }
+
+    #loadMoreBtn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 5px 15px rgba(255, 106, 0, 0.5);
+    }
+
+    @media (max-width: 600px) {
+        h2 { font-size: 22px; }
+        .movies-grid { grid-template-columns: repeat(auto-fill, minmax(140px,1fr)); }
+    }
+</style>
+</head>
+<body>
+
+<h2>Search Results for "<span id="searchQuery"></span>"</h2>
+<div id="searchResults" class="movies-grid"></div>
+<button id="loadMoreBtn">Load More</button>
+
+<script>
+const API_KEY = 'b1bbbc80a37c2eb97c159a9352840008';
+const params = new URLSearchParams(window.location.search);
+const query = params.get("q");
+document.getElementById("searchQuery").innerText = query;
+
+const container = document.getElementById("searchResults");
+const loadMoreBtn = document.getElementById("loadMoreBtn");
+
+let currentPage = 1;
+let allResults = [];
+
+async function searchMovies(page=1){
+    if(!query) return;
+    try{
+        const url = `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(query)}&language=en-US&page=${page}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        allResults = [...allResults, ...data.results];
+        displayMovies(data.results);
+        if(page >= data.total_pages) loadMoreBtn.style.display = 'none';
+        else loadMoreBtn.style.display = 'block';
+    }catch(err){
+        console.error(err);
+        container.innerHTML = "<p>Something went wrong!</p>";
+    }
+}
+
+function displayMovies(movies) {
+    container.innerHTML = "";
+
+    movies.forEach(movie => {
+
+        const poster = movie.poster_path
+            ? `https://image.tmdb.org/t/p/w300/${movie.poster_path}`
+            : "https://images.unsplash.com/photo-1616530940355-351fabd9524b?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
+
+        container.innerHTML += `
+            <div class="movie-card" onclick="goToMovieDetail(${movie.id})">
+                <img src="${poster}" alt="${movie.title || movie.name}">
+                <h4>${movie.title || movie.name}</h4>
+            </div>
+        `;
+    });
+}
+
+
+function goToMovieDetail(id){
+    const movie = allResults.find(m => m.id === id);
+    localStorage.setItem("selectedMovie", JSON.stringify(movie));
+    window.location.href = `moviedetail.html?id=${id}`;
+}
+
+loadMoreBtn.addEventListener("click", ()=>{
+    currentPage++;
+    searchMovies(currentPage);
+});
+
+// Initial search
+searchMovies(currentPage);
+</script>
+</body>
+</html>
