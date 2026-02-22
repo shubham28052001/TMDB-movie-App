@@ -30,12 +30,30 @@
             border-radius: 16px;
         }
 
-        .search-container img {
+
+        .slider img {
             position: absolute;
             width: 100%;
             height: 100%;
             object-fit: cover;
-            filter: brightness(30%);
+            display: none;
+            filter: brightness(65%);
+            transition: opacity 1s ease-in-out, transform 6s ease;
+        }
+
+        .slider img.active {
+            display: block;
+            animation: zoomEffect 8s ease-in-out infinite alternate;
+        }
+
+        @keyframes zoomEffect {
+            from {
+                transform: scale(1);
+            }
+
+            to {
+                transform: scale(1.5);
+            }
         }
 
         .overlay {
@@ -333,130 +351,135 @@
             transform: scale(1.08);
         }
 
-       /* =========================
+        /* =========================
    MOBILE RESPONSIVE FIX
 ========================= */
 
-@media (max-width: 768px) {
+        @media (max-width: 768px) {
 
-    body {
-        overflow-x: hidden;
-    }
+            body {
+                overflow-x: hidden;
+            }
 
-    /* HERO SECTION */
-    .search-container {
-        height: 320px;
-        border-radius: 12px;
-    }
+            /* HERO SECTION */
+            .search-container {
+                height: 320px;
+                border-radius: 12px;
+            }
 
-    .overlay {
-        padding: 20px;
-        text-align: center;
-        align-items: center;
-    }
+            .overlay {
+                padding: 20px;
+                text-align: center;
+                align-items: center;
+            }
 
-    .overlay h1 {
-        font-size: 1.9rem;
-        line-height: 1.2;
-        margin-bottom: 10px;
-    }
+            .overlay h1 {
+                font-size: 1.9rem;
+                line-height: 1.2;
+                margin-bottom: 10px;
+            }
 
-    .overlay h4 {
-        font-size: 1rem;
-        margin-bottom: 35px;
-        opacity: 0.85;
-    }
+            .overlay h4 {
+                font-size: 1rem;
+                margin-bottom: 35px;
+                opacity: 0.85;
+            }
 
-    /* SEARCH BAR */
-    .search-box {
-        top: 82%;
-        width: 95%;
-        padding: 6px;
-    }
+            /* SEARCH BAR */
+            .search-box {
+                top: 82%;
+                width: 95%;
+                padding: 6px;
+            }
 
-    .search-box input {
-        padding: 12px 16px;
-        font-size: 14px;
-    }
+            .search-box input {
+                padding: 12px 16px;
+                font-size: 14px;
+            }
 
-    .search-box button {
-        padding: 12px 18px;
-        font-size: 14px;
-    }
+            .search-box button {
+                padding: 12px 18px;
+                font-size: 14px;
+            }
 
-    /* SECTION LAYOUT */
-    .movie-layout {
-        width: 95%;
-        margin: 25px auto;
-    }
+            /* SECTION LAYOUT */
+            .movie-layout {
+                width: 95%;
+                margin: 25px auto;
+            }
 
-    .movie-layout h2 {
-        font-size: 1.3rem;
-        margin-bottom: 14px;
-        border-left: 5px solid #01b4e4;
-        padding-left: 10px;
-    }
+            .movie-layout h2 {
+                font-size: 1.3rem;
+                margin-bottom: 14px;
+                border-left: 5px solid #01b4e4;
+                padding-left: 10px;
+            }
 
-    /* MOVIE SCROLL */
-    .moviecontainer {
-        gap: 10px;
-        padding-bottom: 10px;
-        -webkit-overflow-scrolling: touch;
-    }
+            /* MOVIE SCROLL */
+            .moviecontainer {
+                gap: 10px;
+                padding-bottom: 10px;
+                -webkit-overflow-scrolling: touch;
+            }
 
-    .moviecontainer::-webkit-scrollbar {
-        height: 0;
-    }
+            .moviecontainer::-webkit-scrollbar {
+                height: 0;
+            }
 
-    /* MOVIE CARD */
-    .moviecards {
-        min-width: 125px;
-        height: 200px;
-        border-radius: 12px;
-    }
+            /* MOVIE CARD */
+            .moviecards {
+                min-width: 125px;
+                height: 200px;
+                border-radius: 12px;
+            }
 
-    .movie-title {
-        font-size: 13px;
-    }
+            .movie-title {
+                font-size: 13px;
+            }
 
-    .movie-release {
-        font-size: 11px;
-    }
+            .movie-release {
+                font-size: 11px;
+            }
 
-    /* FADE FIX */
-    .fade-right {
-        height: 95%;
-    }
+            /* FADE FIX */
+            .fade-right {
+                height: 95%;
+            }
 
-    /* TOGGLE BUTTONS */
-    .trending-toggle,
-    .Popular-toggle,
-    .toprated-toggle {
-        margin-left: 0;
-        margin-top: 10px;
-        transform: scale(0.9);
-    }
+            /* TOGGLE BUTTONS */
+            .trending-toggle,
+            .Popular-toggle,
+            .toprated-toggle {
+                margin-left: 0;
+                margin-top: 10px;
+                transform: scale(0.9);
+            }
 
-    /* VIEW ALL */
-    .view-all-wrapper {
-        min-width: 140px;
-        height: 200px;
-    }
+            /* VIEW ALL */
+            .view-all-wrapper {
+                min-width: 140px;
+                height: 200px;
+            }
 
-    .view-all-btn {
-        padding: 10px 16px;
-        font-size: 13px;
-    }
-}
-
+            .view-all-btn {
+                padding: 10px 16px;
+                font-size: 13px;
+            }
+        }
     </style>
 </head>
 
 <body>
 
     <div class="search-container">
-        <img src="https://images.unsplash.com/photo-1689659700109-db8a16a7da0a?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-            alt="banner">
+        <div class="slider">
+            <img src="https://images.unsplash.com/photo-1503803548695-c2a7b4a5b875?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                class="active">
+            <img
+                src="https://images.unsplash.com/photo-1488866022504-f2584929ca5f?q=80&w=1162&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D">
+            <img
+                src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=80&w=1274&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D">
+        </div>
         <div class="overlay">
             <h1>Welcome.</h1>
             <h4>Millions of movies, TV shows and people to discover. Explore now.</h4>

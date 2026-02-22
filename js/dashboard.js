@@ -12,6 +12,13 @@ const topratedMoviesBtn = document.querySelector('#toprated-movies');
 const topratedTvBtn = document.querySelector('#toprated-tv');
 const searchboxinput = document.querySelector('.search-boxinput');
 const searchbtn = document.querySelector('.searchbtn');
+const images = document.querySelectorAll(".slider img");
+let currentIndex = 0;
+setInterval(() => {
+    images[currentIndex].classList.remove("active");
+    currentIndex = (currentIndex + 1) % images.length;
+    images[currentIndex].classList.add("active");
+}, 5000);
 
 const API_KEY = 'b1bbbc80a37c2eb97c159a9352840008';
 const BASE_URL = 'https://api.themoviedb.org/3';
