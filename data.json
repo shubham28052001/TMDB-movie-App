@@ -1,114 +1,54 @@
 [
     {
-        "adult": false,
         "backdrop_path": "/qKWDHofjMHPSEOTLaixkC9ZmjTT.jpg",
-        "genre_ids": [
-            18
-        ],
         "genre": [
             "Drama"
         ],
-        "id": 1317288,
-        "media_type": "movie",
-        "original_language": "en",
         "original_title": "Marty Supreme",
         "overview": "Marty Mauser, a young man with a dream no one respects, goes to hell and back in pursuit of greatness.",
-        "popularity": 64.6748,
         "poster_path": "/lYWEXbQgRTR4ZQleSXAgRbxAjvq.jpg",
-        "release_date": "2025-12-19",
         "title": "Marty Supreme",
-        "video": false,
-        "vote_average": 7.535,
-        "vote_count": 1009,
         "trailer": "TcMBFSGVi1c"
     },
     {
-        "adult": false,
         "backdrop_path": "/sdXKzllmtecOuI32MTIKJaQ8JuG.jpg",
-        "genre_ids": [
-            18,
-            878
-        ],
         "genre": [
             "Drama",
             "Sci-Fi"
         ],
-        "id": 1032892,
-        "media_type": "movie",
-        "original_language": "en",
         "original_title": "In the Blink of an Eye",
         "overview": "Three storylines, spanning thousands of years, intersect and reflect on hope, connection and the circle of life.",
-        "popularity": 45.3738,
         "poster_path": "/4vWqIdoBavo1htxmxlScDniOS9C.jpg",
-        "release_date": "2026-01-26",
         "title": "In the Blink of an Eye",
-        "video": false,
-        "vote_average": 6.9,
-        "vote_count": 7,
         "trailer": "zSWdZVtXT7E"
     },
     {
-        "adult": false,
         "backdrop_path": "/hYgUkH7TusddHRtelj53I6gFOWR.jpg",
-        "genre_ids": [
-            28,
-            53
-        ],
         "genre": [
             "Action",
             "Thriller"
         ],
-        "id": 799882,
-        "media_type": "movie",
-        "original_language": "en",
         "original_title": "The Bluff",
         "overview": "When her tranquil life on a remote island is shattered by the return of her vengeful former captain, a skilled ex-pirate must confront her bloody past and unleash her deadly talents to save her family from a ruthless siege.",
-        "popularity": 353.5452,
         "poster_path": "/sojEzvfxR2DBcDSJyAisX8TWjov.jpg",
-        "release_date": "2026-02-17",
         "title": "The Bluff",
-        "video": false,
-        "vote_average": 6.14,
-        "vote_count": 68,
         "trailer": "6ZfuNTqbHE8"
     },
     {
-        "adult": false,
         "backdrop_path": "/yWCZc2TcsCYbMMjvUIsczmQi2TX.jpg",
-        "genre_ids": [
-            27,
-            9648,
-            80
-        ],
         "genre": [
             "Horror",
             "Mystery",
             "Crime"
         ],
-        "id": 1159559,
-        "media_type": "movie",
-        "original_language": "en",
         "original_title": "Scream 7",
         "overview": "When a new Ghostface killer emerges in the quiet town where Sidney Prescott has built a new life, her darkest fears are realized as her daughter becomes the next target. Determined to protect her family, Sidney must face the horrors of her past to put an end to the bloodshed once and for all.",
-        "popularity": 162.9968,
         "poster_path": "/jjyuk0edLiW8vOSnlfwWCCLpbh5.jpg",
-        "release_date": "2026-02-25",
         "title": "Scream 7",
-        "video": false,
-        "vote_average": 5.755,
-        "vote_count": 94,
         "trailer": "beToTslH17s"
     },
     {
-        "adult": false,
         "backdrop_path": "https://image.tmdb.org/t/p/original/vOV4Qy3g791OTzEndiSGoJwuI2M.jpg",
-        "genre_ids": [
-            53,
-            28,
-            12,
-            18,
-            14
-        ],
         "genre": [
             "Thriller",
             "Action",
@@ -116,73 +56,37 @@
             "Drama",
             "Fantasy"
         ],
-        "id": 1401778,
-        "original_language": "en",
         "original_title": "Turbulence",
         "overview": "Young married couple Zach and Emmy decide to take a hot air balloon trip across the Italian Dolomites to rekindle their relationship. When they and pilot Harry are joined by a third passenger, Julia, events unfold in ways they could never imagine five thousand meters in the air.",
-        "popularity": 175.9658,
         "poster_path": "https://image.tmdb.org/t/p/w500/jRuiKL4S9UpLma2ZlM47xIu2gbe.jpg",
-        "release_date": "2025-11-26",
         "title": "Turbulence",
-        "video": false,
-        "vote_average": 5.451,
-        "vote_count": 51,
         "trailer": "a9Kx2XjV2yA"
     },
     {
-        "adult": false,
         "backdrop_path": "/nTbO6UF944b0VZrgypMK5rFYRSW.jpg",
-        "genre_ids": [
-            9648,
-            18,
-            27
-        ],
         "genre": [
             "Mystery",
             "Drama",
             "Horror"
         ],
-        "id": 680493,
-        "media_type": "movie",
-        "original_language": "en",
         "original_title": "Return to Silent Hill",
         "overview": "When James receives a mysterious letter from his lost love Mary, he is drawn to Silent Hill—a once-familiar town now consumed by darkness. As he searches for her, James faces monstrous creatures and unravels a terrifying truth that will push him to the edge of his sanity.",
-        "popularity": 182.089,
         "poster_path": "/dOpnJnhABTw85CG80BhBdBH9Teh.jpg",
-        "release_date": "2026-01-21",
         "title": "Return to Silent Hill",
-        "video": false,
-        "vote_average": 5.1,
-        "vote_count": 207,
         "trailer": "beToTslH17s"
     },
     {
-        "adult": false,
         "backdrop_path": "/1qwhYqg7YEZajh3Q4biqbuQoDq8.jpg",
-        "genre_ids": [
-            16,
-            35,
-            10751,
-            28
-        ],
         "genre": [
             "Animation",
             "Comedy",
             "Family",
             "Action"
         ],
-        "id": 1297842,
-        "media_type": "movie",
-        "original_language": "en",
         "original_title": "GOAT",
         "overview": "A small goat with big dreams gets a once-in-a-lifetime shot to join the pros and play roarball, a high-intensity, co-ed, full-contact sport dominated by the fastest, fiercest animals in the world.",
-        "popularity": 76.8515,
         "poster_path": "/wfuqMlaExcoYiUEvKfVpUTt1v4u.jpg",
-        "release_date": "2026-02-11",
         "title": "GOAT",
-        "video": false,
-        "vote_average": 7.481,
-        "vote_count": 77,
         "trailer": "hA6hldpSTF8"
     }
 ]
