@@ -12,13 +12,115 @@ const topratedMoviesBtn = document.querySelector('#toprated-movies');
 const topratedTvBtn = document.querySelector('#toprated-tv');
 const searchboxinput = document.querySelector('.search-boxinput');
 const searchbtn = document.querySelector('.searchbtn');
-const images = document.querySelectorAll(".slider img");
-let currentIndex = 0;
-setInterval(() => {
-    images[currentIndex].classList.remove("active");
-    currentIndex = (currentIndex + 1) % images.length;
-    images[currentIndex].classList.add("active");
-}, 5000);
+const logoutBtn = document.querySelector(".btn")
+
+let movies = [];
+let current = 0;
+let slideInterval;
+
+const IMAGE_BASE = "https://image.tmdb.org/t/p/original";
+
+// -------- FETCH JSON DATA --------
+async function loadMovies() {
+    try {
+        const response = await fetch("data.json");
+        movies = await response.json();
+
+        createBullets();
+        loadMovie(current);
+        resetTimer();
+    } catch (error) {
+        console.error("Error loading JSON:", error);
+    }
+}
+
+// -------- CREATE BULLETS --------
+function createBullets() {
+    const bulletContainer = document.getElementById("bullets");
+    bulletContainer.innerHTML = "";
+
+    movies.forEach((_, index) => {
+        const span = document.createElement("span");
+        span.onclick = () => goToSlide(index);
+        bulletContainer.appendChild(span);
+    });
+}
+
+// -------- LOAD MOVIE --------
+function loadMovie(index) {
+    current = index;
+    const movie = movies[index];
+
+    const titleEl = document.getElementById("title");
+    const posterEl = document.getElementById("poster");
+    const bgEl = document.getElementById("bg-image");
+    const descEl = document.getElementById("desc");
+
+    // Fade animation reset
+    titleEl.classList.remove("fade");
+    void titleEl.offsetWidth;
+    titleEl.classList.add("fade");
+
+    // Text data
+    titleEl.innerText = movie.title;
+    descEl.innerText = movie.overview;
+
+    // TMDB image full path
+    posterEl.src = IMAGE_BASE + movie.poster_path;
+    bgEl.style.backgroundImage = `url('${IMAGE_BASE + movie.backdrop_path}')`;
+
+    // Genre
+    const genreContainer = document.getElementById("genre");
+    genreContainer.innerHTML = "";
+    if (movie.genre) {
+        movie.genre.forEach(g => {
+            const span = document.createElement("span");
+            span.innerText = g;
+            genreContainer.appendChild(span);
+        });
+    }
+
+    // Active bullet update
+    const allBullets = document.querySelectorAll(".controls span");
+    allBullets.forEach((bullet, i) => {
+        bullet.className = i === index ? "active" : "";
+    });
+}
+
+// -------- SLIDER CONTROLS --------
+function goToSlide(index) {
+    resetTimer();
+    loadMovie(index);
+}
+
+function nextSlide() {
+    current = (current + 1) % movies.length;
+    loadMovie(current);
+}
+
+function resetTimer() {
+    clearInterval(slideInterval);
+    slideInterval = setInterval(nextSlide, 3000);
+}
+
+// -------- TRAILER --------
+function openTrailer() {
+    clearInterval(slideInterval);
+    const modal = document.getElementById("trailerModal");
+    const frame = document.getElementById("youtubeFrame");
+
+    frame.src = `https://www.youtube.com/embed/${movies[current].trailer}?autoplay=1`;
+    modal.style.display = "flex";
+}
+
+function closeTrailer() {
+    document.getElementById("trailerModal").style.display = "none";
+    document.getElementById("youtubeFrame").src = "";
+    resetTimer();
+}
+
+// -------- INIT --------
+loadMovies();
 
 const API_KEY = 'b1bbbc80a37c2eb97c159a9352840008';
 const BASE_URL = 'https://api.themoviedb.org/3';
@@ -41,7 +143,7 @@ searchbtn.addEventListener("click", () => {
     searchboxinput.value = "";
 });
 searchboxinput.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") { 
+    if (e.key === "Enter") {
         const query = searchboxinput.value.trim();
         if (!query) return;
 
@@ -50,6 +152,11 @@ searchboxinput.addEventListener("keydown", (e) => {
     }
 });
 
+
+
+function logoutbtn() {
+
+}
 
 async function fetchTrending(page = 1) {
     try {
