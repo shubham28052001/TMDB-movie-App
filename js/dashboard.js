@@ -13,6 +13,7 @@ const topratedTvBtn = document.querySelector('#toprated-tv');
 const searchboxinput = document.querySelector('.search-boxinput');
 const searchbtn = document.querySelector('.searchbtn');
 const logoutBtn = document.querySelector(".btn")
+const suggestionList = document.getElementById("suggestionList");
 
 let movies = [];
 let current = 0;
@@ -151,12 +152,6 @@ searchboxinput.addEventListener("keydown", (e) => {
         searchboxinput.value = "";
     }
 });
-
-
-
-function logoutbtn() {
-
-}
 
 async function fetchTrending(page = 1) {
     try {
@@ -383,7 +378,93 @@ function selectMovie(id) {
     }
 }
 
+function debounce(func, delay) {
+    let timer;
+    return function (...args) {
+        clearTimeout(timer);
+        timer = setTimeout(() => func(...args), delay);
+    }
+}
 
+// Fetch search suggestions
+async function fetchSuggestions(query) {
+    if (!query) {
+        suggestionList.innerHTML = "";
+        return;
+    }
+
+    try {
+        const res = await fetch(
+            `${BASE_URL}/search/movie?api_key=${API_KEY}&query=${query}`
+        );
+
+        const data = await res.json();
+        showSuggestions(data.results);
+
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+function showSuggestions(movies) {
+    suggestionList.innerHTML = "";
+
+    movies.slice(0, 8).forEach(movie => {
+
+        const li = document.createElement("li");
+
+        const img = document.createElement("img");
+        img.src = movie.poster_path
+            ? IMAGE_BASE + movie.poster_path
+            : "https://via.placeholder.com/40x60";
+
+        const info = document.createElement("div");
+
+        info.innerHTML = `
+            <span class="s-title">
+                ${movie.title || movie.name}
+            </span>
+
+            <div class="s-meta">
+                ⭐ ${movie.vote_average?.toFixed(1) || "N/A"}
+                • ${movie.release_date?.split("-")[0] || "N/A"}
+                • ${movie.original_language?.toUpperCase() || ""}
+            </div>
+        `;
+
+        li.appendChild(img);
+        li.appendChild(info);
+
+        li.addEventListener("click", () => {
+
+            localStorage.setItem("selectedMovie", JSON.stringify(movie));
+
+            searchboxinput.value = movie.title || movie.name;
+            suggestionList.innerHTML = "";
+
+            window.location.href =
+                `moviedetail.html?id=${movie.id}&type=movie`;
+
+            searchboxinput.value = "";
+        });
+
+        suggestionList.appendChild(li);
+    });
+}
+
+searchboxinput.addEventListener(
+    "input",
+    debounce((e) => {
+        fetchSuggestions(e.target.value);
+    }, 400)
+);
+
+document.addEventListener("click", (e) => {
+    if (!e.target.closest(".search-box")) {
+        suggestionList.innerHTML = "";
+        searchboxinput.value="";
+    }
+});
 
 
 
