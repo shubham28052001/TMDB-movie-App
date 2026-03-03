@@ -100,7 +100,7 @@ function nextSlide() {
 
 function resetTimer() {
     clearInterval(slideInterval);
-    slideInterval = setInterval(nextSlide, 3000);
+    slideInterval = setInterval(nextSlide, 5000);
 }
 
 // -------- TRAILER --------
